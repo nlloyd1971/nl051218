@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- v3 - putting data inline to get published quickly-->
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>My Map</title>
+<link rel="stylesheet" href="https://atlas.microsoft.com/sdk/css/atlas.min.css?api-version=1.0" type="text/css" />    
+<script type='text/javascript' src="https://atlas.microsoft.com/sdk/js/atlas.min.js?api-version=1.0"></script>
+</head>
+
+<body>
+    <h1>My Map</h1>
+
+	<div id="myMap" style="position:relative;width:800px;height:600px;"></div>
+
+
+<script type='text/javascript'>
+var vPinData= {
+        "Pins": [
+            {
+		"deviceid" : "0",
+                "name": "Vicarage Rd",
+                "long": "-0.401486",
+                "lat": "51.649836",   
+                "text": "Donec auctor magna sed nisi scelerisque malesuada. ",
+		"status" : "",
+		"image" : ""
+            },
+            {
+		"deviceid" : "1",
+                "name": "Liberty",
+                "long": "-3.9351", 
+                "lat": "51.6422",   
+                "text": "Curabitur elementum magna sit amet eros ultricies efficitur.",
+		"status" : "",
+		"image" : ""
+            },
+            {
+		"deviceid" : "2",
+                "name": "St Marys",
+                "long": "-1.391111",
+                "lat": "50.905833", 
+                "text": "Etiam eleifend at mauris ut sodales.",
+		"status" : "",
+		"image" : ""
+            },
+            {
+		"deviceid" : "3",
+                "name": "Madejski",
+                "long": "-0.982778",
+                "lat": "51.422222",
+                "text": "Duis consectetur dolor ut urna interdum mattis.",
+		"status" : "",
+		"image" : ""
+            },
+            {
+		"deviceid" : "4",
+                "name": "Villa Park",
+                "long": "-1.884722",
+                "lat": "52.509167",
+                "text": "Cras ac pulvinar nulla quisque hendrerit.",
+		"status" : "",
+		"image" : ""
+            },
+        ]
+    };
+</script>
+
+
+    <script type='text/javascript'>
+        var map;
+
+        function DisplayMap() {
+            
+            var defaultCenter = [-0.931182, 51.461451];
+            
+             map = new atlas.Map('myMap', {
+                'subscription-key': 'wTxOKLy0U4fa4aRTMEGlwdM70JSwewV0hci3v2FxfEo',
+                center: defaultCenter,
+                zoom: 6
+            });
+            
+            var pins = [];
+            
+         }
+		      
+        function DisplayMapData() {
+        
+            var pins = [];
+			for (var i = 0; i < vPinData.Pins.length; i++) { 
+				var oPin = vPinData.Pins[i];
+                var name = oPin.name;
+                var long = oPin.long;
+                var lat = oPin.lat;
+                var text = oPin.text;
+				
+            	var pinPosition = [long, lat];
+                var pin = new atlas.data.Feature(new atlas.data.Point(pinPosition), {
+                    icon: 'pin-red',
+                    iconSize: 1,
+                    title: name,
+                    textx: text
+                });
+
+                // Add the pin to the map and set some pin layer options that apply to all pins in the layer.
+                map.addPins([pin], {
+                    name: 'default-pin-layer'+i,
+                    fontColor: '#000',
+                    fontSize: 14,
+                    textOffset: [0, 20],
+                    textFont: 'SegoeUi-Bold'
+                });
+
+                /* Create content for popup */
+                var popupContentElement = document.createElement("div");
+                popupContentElement.style.padding = "8px";
+                var popupNameElement = document.createElement("div");
+                popupNameElement.innerText = text;
+                popupContentElement.appendChild(popupNameElement);
+
+                /* Create a popup */
+                var popup = new atlas.Popup({
+                    content: popupContentElement,
+                    position: pinPosition,
+                    pixelOffset: [0, 0]
+                });
+
+                /* Add an event listener for mouse over */
+                map.addEventListener("mouseover", "default-pin-layer" + i, (e) => {
+                    var popupcontent = document.createElement("div");
+                    popupcontent.innerHTML = " " + e.features[0].properties.textx + " " ;
+                    popup.setPopupOptions({
+                        position: e.features[0].geometry.coordinates,
+                        content: popupcontent
+                      });
+
+                    popup.open(map);
+                });			
+ 			} 
+         }
+      
+         
+        DisplayMap(); 
+        DisplayMapData();
+                
+    </script>
+</body>
+
+
+
+
+ 
+
+
+</html>
